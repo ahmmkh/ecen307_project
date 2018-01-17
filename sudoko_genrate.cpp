@@ -1,11 +1,10 @@
 #include <stdio.h>
 #include<iostream>
+#include "board.hpp"
 
-/** TODO // 
-	Genrate Terminal paatern with las vegas algorithm
- **/ 
 int main(int argc, char const *argv[])
 {
+	Board x;
 	/* code */
 	return 0;
 }
