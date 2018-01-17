@@ -48,7 +48,7 @@ void Board::update_possibilities(){
 			if (this->c_board[i][j]) continue;
 			
 			possibilites[10] = {1};
-			
+			//dd
 			for (int k = 1; i < 10; k++)
 			{
 				if (!row_digits[i][k])possibilites[k] = 0;
