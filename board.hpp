@@ -11,6 +11,9 @@ class Board
 {
 public:
 	Board();
+	int get(int i,int j);
+	void hide(int i ,int j);
+	void add(int i,int j , int value);
 	void update_possibilities();
 private:
 	int c_board[9][9];
@@ -19,9 +22,12 @@ private:
 
 Board::Board(){
 	this->c_board[9][9] = {1};
+
 	static const int arr[] = {1,2,3,4,5,6,7,8,9};
+	
 	for (int i = 1; i < 10; i++)
 		for (int j = 1; j < 10; j++)
+			//because it's empty so you have all possiblities intially 
 			c_possibilities[(i*10) +j] = std::vector<int>  (arr, arr + sizeof(arr) / sizeof(arr[0]) ); 
 			//std::cout << c_possibilities[11][1];
 
@@ -34,6 +40,7 @@ void Board::update_possibilities(){
 		for (int j = 0; i < 9; j++)
 		{
 			cell = this->c_board[i][j];
+			
 			if (cell)
 			{
 			    row_digits[i][cell] = 0;
@@ -62,10 +69,26 @@ void Board::update_possibilities(){
 				if (possibilites[x])temp.push_back(x);
 				
 			}
+
 			c_possibilities[(i*10) + j] = temp;
 
 
 		}	
 }
+
+int Board::get(int i,int j ){return this->c_board[i][j];}
+
+void Board::add(int i ,int j,int value){
+	this->c_board[i][j] = value;
+	this->update_possibilities();
+}
+ void Board::hide(int i , int j ){
+ 	if (this->c_board[i][j] == 0) return;
+ 	else {
+ 		this->c_board[i][j]=0;
+ 		this-> update_possibilities();	
+ 	}
+ 
+ }
 //TODO Implement Board class 
 #endif 
