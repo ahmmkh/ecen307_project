@@ -3,6 +3,7 @@
 //random_shuffle(&a[0], &a[10]);
 #include<map>
 #include<vector>
+#include <cstddef>
 int block(int i,int j){
 
 	return ((i / 3) * 3) + j / 3;
@@ -11,6 +12,8 @@ class Board
 {
 public:
 	Board();
+	std::vector<int> get_posibilities(int i ,int j);
+	bool conflict(int i1,int j1,int i2,int j2);
 	int get(int i,int j);
 	void hide(int i ,int j);
 	void add(int i,int j , int value);
@@ -89,6 +92,23 @@ void Board::add(int i ,int j,int value){
  		this-> update_possibilities();	
  	}
  
+ }
+
+ std::vector<int> Board::get_posibilities(int i,int j) {
+
+ 	if (this->c_board[i][j]!=0) throw "cell is not empty";
+ 	std::map <int,std::vector<int> >::const_iterator it = this->c_possibilities.find(i*10 + j);
+ 	if (it!=c_possibilities.end()) return this->c_possibilities[i*10 + j];
+ 	else return {};
+ }
+
+ bool Board::conflict(int i1,int j1,int i2, int j2){
+ 	if (this->c_board[i1][j1]==0 || this->c_board[i2][j2]==0 )return false;
+ 	if (this->c_board[i1][j1] != this->c_board[i2][j2]) return false;
+ 	if (i1 == i2) return true;	
+ 	if (j1 == j2) return true;
+ 	if (block(i1,j1)==block(i2,j2))return true;
+ 	return false;	
  }
 //TODO Implement Board class 
 #endif 
