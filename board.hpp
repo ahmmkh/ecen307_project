@@ -12,6 +12,7 @@ class Board
 {
 public:
 	Board();
+	bool valid ()
 	std::vector<int> get_posibilities(int i ,int j);
 	bool conflict(int i1,int j1,int i2,int j2);
 	int get(int i,int j);
@@ -79,6 +80,7 @@ void Board::update_possibilities(){
 		}	
 }
 
+
 int Board::get(int i,int j ){return this->c_board[i][j];}
 
 void Board::add(int i ,int j,int value){
@@ -109,6 +111,21 @@ void Board::add(int i ,int j,int value){
  	if (j1 == j2) return true;
  	if (block(i1,j1)==block(i2,j2))return true;
  	return false;	
+ }
+ bool Board::valid(){
+
+ 	for (int i1 = 0; i1 < 9; i1++)
+ 		 	for (int j1 = 0; j1 < 9; j1++)
+ 		 		 	for (int i2 = 0; i2 < 9; i2++)
+ 		 		 		 	for (int j2 = 0; j2 < 9; j2++)
+ 		 		 		 		{
+ 		 		 		 			if (i1*10 +j1 ==i2*10 +j2 ) continue;
+ 		 		 		 			if(this->conflict(i1,j1,i2,j2))return false;
+ 		 		 		 		}
+ 	return true	; 		 		 	
+
+
+
  }
 //TODO Implement Board class 
 #endif 
