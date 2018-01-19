@@ -12,7 +12,7 @@ class Board
 {
 public:
 	Board();
-	bool valid ()
+	bool valid ();
 	std::vector<int> get_posibilities(int i ,int j);
 	bool conflict(int i1,int j1,int i2,int j2);
 	int get(int i,int j);
