@@ -29,7 +29,7 @@ else{
 	{
 		Board *nb,*pb;
 		nb = b;
-		nb->add(mini,minj,k);
+		nb->add(mini,minj,possibilities[k]);
 		pb = solve(nb);
 		if (pb!=NULL) return pb;
 	}

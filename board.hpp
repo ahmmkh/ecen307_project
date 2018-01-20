@@ -4,6 +4,7 @@
 #include<map>
 #include<vector>
 #include <cstddef>
+#include <iostream>
 int block(int i,int j){
 
 	return ((i / 3) * 3) + j / 3;
@@ -19,48 +20,66 @@ public:
 	void hide(int i ,int j);
 	void add(int i,int j , int value);
 	void update_possibilities();
+	Board* solve();
 private:
-	int c_board[9][9];
 	std::map <int,std::vector<int> > c_possibilities;	
+	int c_board[9][9];
+	
 };
 
 Board::Board(){
-	this->c_board[9][9] = {1};
+	for (int i = 0; i < 9; i++)
+	for (int j = 0; j < 9; j++)
+		c_board[i][j]=0;
+	
 
 	static const int arr[] = {1,2,3,4,5,6,7,8,9};
 	
-	for (int i = 1; i < 10; i++)
-		for (int j = 1; j < 10; j++)
+	for (int i = 0; i < 9; i++)
+		for (int j = 0; j < 9; j++)
 			//because it's empty so you have all possiblities intially 
 			c_possibilities[(i*10) +j] = std::vector<int>  (arr, arr + sizeof(arr) / sizeof(arr[0]) ); 
-			//std::cout << c_possibilities[11][1];
+	//std::cout << c_possibilities[1][1];
 
 }
 
 void Board::update_possibilities(){
-	int cell, possibilites[10] ={1},row_digits[10][10]={1} ,column_digits[10][10]={1} ,block_digits[10][10]={1}; 
-	std::vector<int> temp;
-	for (int i = 0; i < 9; i++)
-		for (int j = 0; i < 9; j++)
+	int cell ;int row_digits[10][10];int column_digits[10][10] ;int block_digits[10][10]; 
+	
+	for (int i = 0; i < 10; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			row_digits[i][j]=1;
+			column_digits[i][j]=1;
+			block_digits[i][j]=1;
+					}
+	}
+
+
+	for (int i = 0; i < 9; i++){
+		for (int j = 0; j < 9; j++)
 		{
 			cell = this->c_board[i][j];
 			
-			if (cell)
+			if (cell!=0)
 			{
 			    row_digits[i][cell] = 0;
 	            column_digits[j][cell] = 0;
 	            block_digits[block(i, j)][cell] = 0;
 			}
 		}
-
-	for (int i = 0; i < 9; i++)
-		for (int j = 0; i < 9; j++)
+	}
+	c_possibilities.clear();
+	for (int i = 0; i < 9; i++){
+		for (int j = 0; j < 9; j++)
 		{
-			if (this->c_board[i][j]) continue;
+			if (this->c_board[i][j]!=0) continue;
 			
-			possibilites[10] = {1};
+			int possibilites[] = {1,1,1,1,1,1,1,1,1,1};
+
 			//dd
-			for (int k = 1; i < 10; k++)
+			for (int k = 1; k < 10; k++)
 			{
 				if (!row_digits[i][k])possibilites[k] = 0;
 				if (!column_digits[j][k])possibilites[k] = 0;
@@ -68,6 +87,8 @@ void Board::update_possibilities(){
 				
 			}
 
+			std::vector<int> temp;
+			
 			for (int x = 1; x <10 ; x++)
 			{
 				if (possibilites[x])temp.push_back(x);
@@ -78,6 +99,7 @@ void Board::update_possibilities(){
 
 
 		}	
+	}
 }
 
 
@@ -127,5 +149,38 @@ void Board::add(int i ,int j,int value){
 
 
  }
+
+Board* Board::solve(){
+std::vector<int> possibilities;
+int mini=10; int minj=10;int minlen=10;
+for (int i = 0; i < 9; i++)
+for (int j = 0; j < 9; j++)
+{
+	if (this->get(i,j)!=0) continue;
+	
+	possibilities = this->get_posibilities(i,j);
+	if( possibilities.empty()) return NULL;
+	if (possibilities.size()<minlen){
+		minlen = possibilities.size();
+		minj = j;
+		mini = i; 
+
+	}
+}
+if(minlen == 10)return this;
+possibilities = this->get_posibilities(mini,minj);
+if (possibilities.size() == 0)return NULL;
+else{
+	for (int k = 0; k < possibilities.size(); k++)
+	{
+		
+		this->add(mini,minj, possibilities [k]);
+
+		if (this->solve()!=NULL) return this->solve();
+	}
+
+	return NULL;
+}
+}	 
 //TODO Implement Board class 
 #endif 
