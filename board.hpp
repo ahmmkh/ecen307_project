@@ -5,10 +5,13 @@
 #include<vector>
 #include <cstddef>
 #include <iostream>
+//#include "strategy.hpp"
+
 int block(int i,int j){
 
 	return ((i / 3) * 3) + j / 3;
 }
+
 class Board
 {
 public:
@@ -21,6 +24,7 @@ public:
 	void add(int i,int j , int value);
 	void update_possibilities();
 	Board* solve();
+
 private:
 	std::map <int,std::vector<int> > c_possibilities;	
 	int c_board[9][9];
@@ -174,13 +178,49 @@ else{
 	for (int k = 0; k < possibilities.size(); k++)
 	{
 		
-		this->add(mini,minj, possibilities [k]);
+		this->add(mini,minj, possibilities[k]);
 
 		if (this->solve()!=NULL) return this->solve();
 	}
 
 	return NULL;
 }
-}	 
+}	
+// Board* Board::dig(strategy s){
+// int dig_counter=0;
+// for (int k = 0; k < s.boardCells.size(); k++)
+// {
+// 	int i = s.boardCells[k]/10;
+// 	int j = s.boardCells[k]%10;
+// 	if (!s.canBeDug(this,i,j))continue;
+// 	int pre_value = this->get(i,j);
+// 	std::vector<int> poss;
+// 	poss = this->get_posibilities(i,j);
+// 	poss.erase(std::remove(poss.begin(), poss.end(), pre_value), poss.end());
+// 	bool another_sol = false;
+// 	for (int x = 0; x < poss.size(); x++)
+// 	{
+// 		this->add(i,j,poss[x])
+// 		if (this->solve()!=NULL){ another_sol = true;break;}
+
+// 	}
+
+// 	if (another_sol)
+	
+// 	{
+// 		this->add(i,j,pre_value);
+// 	}
+// 	else{
+// 		this->hide(i,j);
+// 		dig_counter++;
+// 	}
+// 	if (dig_counter>=s.limitOfEmptyCells())
+// 	{
+// 		return this;
+// 	}
+// }
+// return this;
+
+// }
 //TODO Implement Board class 
 #endif 

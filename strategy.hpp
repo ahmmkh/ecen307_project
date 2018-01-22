@@ -3,19 +3,24 @@
 
 #include<vector>
 #include<algorithm>
-class strategy
+#include <iostream>
+#include "board.hpp"
+//Board xs;
+
+class Strategy
 {
 public:
-    strategy(int difficulty);
+    Strategy(int difficulty);
     void randomizingGlobally();
     void jumpingOneCell();
     void wandringAlongS();
     void leftRightTopBottom();
-    bool canBeDug();
-    int maximumEmptyCells=0;
-    int limitOfEmptyCells =0;
+    bool canBeDug(Board* b,int i,int j);
+    int maximumEmptyCells;
+    int limitOfEmptyCells;
+    std::vector<int> boardCells;
 };
-strategy::strategy(int difficulty){
+Strategy::Strategy(int difficulty){
     switch(difficulty){
     case 1:
         this->randomizingGlobally();
@@ -43,70 +48,81 @@ strategy::strategy(int difficulty){
         this->limitOfEmptyCells=54;
         break;
     default:
-        cout<<"Please enter difficulty from 1 to 5 "<<endl;
+        std::cout<<"Please enter difficulty from 1 to 5 "<<std::endl;
         break;
     }
 
 }
-void strategy::leftRightTopBottom(){
-    vector<int> boardCells;
-    for(int i=1; i<10; i++){
-        for(int j=1; j<10; j++){
-            boardCells.push_back(i*10+j);
+void Strategy::leftRightTopBottom(){
+    this->boardCells.clear();
+    for(int i=0; i<9; i++){
+        for(int j=0; j<9; j++){
+            this->boardCells.push_back((i*10)+j);
         }
     }
 }
-void strategy::wandringAlongS(){
-    vector<int> boardCells;
-    for(int i=1; i<10; i++){
-        for(int j=1; j<10;j++){
+void Strategy::wandringAlongS(){
+   this->boardCells.clear();
+    for(int i=0; i<9; i++){
+        for(int j=0; j<9;j++){
             if(i%2==0){
-                boardCells.push_back(i*10+(10-j));
+                this->boardCells.push_back(i*10+(10-j));
             }
             else{
-                boardCells.push_back(i*10+j);
-            }
-        }
-    }
-}
-void strategy::jumpingOneCell(){
-    vector<int> boardCells;
-    for(int i=1; i<10;i++){
-        for(int j=1; j<10 ; j+=2){
-            if(i%2==0){
-                boardCells.push_back(i*10+(10-j));
-            }
-            else{
-                boardCells.push_back(i*10+j);
-            }
-        }
-    }
-    for(int i=1; i<10;i++){
-        for(int j=2; j<10 ; j+=2){
-            if(i%2==0){
-                boardCells.push_back(i*10+(10-j));
-            }
-            else{
-                boardCells.push_back(i*10+j);
+                this->boardCells.push_back(i*10+j);
             }
         }
     }
 }
-void strategy::randomizingGlobally(){
-    vector<int> boardCells;
-    for(int i=1; i<10; i++){
-        for(int j=1; j<10; j++){
-            boardCells.push_back(i*10+j);
+void Strategy::jumpingOneCell(){
+    this->boardCells.clear();
+    for(int i=0; i<9;i++){
+        for(int j=0; j<9 ; j+=2){
+            if(i%2==0){
+                this->boardCells.push_back((i*10)+j);
+            }
+            else{
+                this->boardCells.push_back(i*10+ (8-j));
+            }
         }
     }
-    random_shuffle(boardCells.begin(), boardCells.end());
+    for(int i=0; i<9;i++){
+        for(int j=1; j<9 ; j+=2){
+            if(i%2==0){
+                this->boardCells.push_back(i*10+(8-j));
+            }
+            else{
+                this->boardCells.push_back(i*10+j);
+            }
+        }
+    }
+}
+void Strategy::randomizingGlobally(){
+    this->boardCells.clear();
+    for(int i=0; i<9 ;i++){
+        for(int j=0; j<9; j++){
+            this->boardCells.push_back(i*10+j);
+        }
+    }
+    random_shuffle(this->boardCells.begin(), this->boardCells.end());
 }
 
-bool strategy::canBeDug(board, row, column){
-    int emptyCelss=0;
-    for(int i=1; i<10;i++){
-
+bool Strategy::canBeDug(Board *b, int i, int j) {
+    int emptyCell=0;
+    for(int k=0; k<9;k++){
+        if(b->get(i,k)==0) emptyCell++;
     }
+
+    if (emptyCell >= this->maximumEmptyCells) return false;
+
+    emptyCell=0;
+    for(int x=0; x<9;x++){
+        if(b->get(j,x)==0) emptyCell++;
+    }
+
+    if (emptyCell>= this->maximumEmptyCells) return false;
+
+    return true;
 }
 
 
